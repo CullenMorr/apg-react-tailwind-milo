@@ -1,5 +1,5 @@
-// src/components/layout/Sidebar.tsx
 import Image from "next/image";
+import Link from "next/link";
 import {
   EnvelopeIcon,
   UsersIcon,
@@ -8,7 +8,13 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+
 import {useState} from "react";
+
+type Props = {
+  isCollapsed: boolean;
+  setIsCollapsed: (value: boolean) => void;
+};
 
 const navigation = [
   {
@@ -17,8 +23,8 @@ const navigation = [
     icon: EnvelopeIcon,
     defaultExpanded: true,
     links: [
-      {name: "Email Campaigns", href: "/email-campaigns"},
-      {name: "Email Templates", href: "/email-templates"},
+      {name: "Email Campaigns", href: "/campaigns"},
+      {name: "Email Templates", href: "/templates"},
     ],
   },
   {
@@ -33,8 +39,7 @@ const navigation = [
   },
 ];
 
-export default function Sidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+export default function Sidebar({isCollapsed, setIsCollapsed}: Props) {
   const [expandedSections, setExpandedSections] = useState(() => {
     const init: Record<string, boolean> = {};
     navigation.forEach((section) => {
@@ -44,12 +49,15 @@ export default function Sidebar() {
   });
 
   const toggleSection = (id: string) => {
-    setExpandedSections((prev) => ({...prev, [id]: !prev[id]}));
+    setExpandedSections((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
   };
 
   return (
     <div
-      className={`h-screen bg-primary-500 text-white transition-all duration-300 flex flex-col ${
+      className={`fixed top-0 left-0 h-screen bg-primary-500 text-white z-50 transition-all duration-300 flex flex-col ${
         isCollapsed ? "w-16" : "w-72"
       }`}
     >
@@ -111,12 +119,12 @@ export default function Sidebar() {
               <ul className="flex flex-col px-3 pb-2">
                 {section.links.map((link) => (
                   <li key={link.name}>
-                    <a
+                    <Link
                       href={link.href}
                       className="block font-semibold px-4 py-2 rounded hover:bg-primary-600"
                     >
                       {link.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
