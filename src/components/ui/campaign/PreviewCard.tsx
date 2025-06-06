@@ -1,6 +1,10 @@
-import {Campaign} from "@/types/campaign";
+import { Campaign } from "@/types/campaign";
 
-export default function CampaignPreviewCard({campaign}: {campaign: Campaign}) {
+export default function CampaignPreviewCard({
+  campaign,
+}: {
+  campaign: Campaign;
+}) {
   const getOpenRate = (campaign: Campaign) => {
     if (!campaign || !campaign.email_events) return 0;
 
@@ -74,7 +78,7 @@ export default function CampaignPreviewCard({campaign}: {campaign: Campaign}) {
         </div>
 
         <div className="bg-green-50 rounded p-2 group">
-          <div className="text-green-600">Opened</div>
+          <div className="text-green-600">Opens</div>
           <div className="font-semibold text-green-700"></div>
 
           <div className="text-green-600 group-hover:hidden">
@@ -86,7 +90,7 @@ export default function CampaignPreviewCard({campaign}: {campaign: Campaign}) {
         </div>
 
         <div className="bg-purple-50 rounded p-2 group">
-          <div className="text-purple-600">Clicked</div>
+          <div className="text-purple-600">Clicks</div>
           <div className="text-purple-600 ">{campaign.emails_clicked}</div>
         </div>
       </div>

@@ -1,67 +1,86 @@
+import { useUser } from "@/context/UserContext";
 import Image from "next/image";
 import Link from "next/link";
 import {
   EnvelopeIcon,
+  DocumentTextIcon,
   UsersIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
+  UserGroupIcon,
   Bars3Icon,
   XMarkIcon,
+  ShieldCheckIcon,
+  UserIcon,
 } from "@heroicons/react/24/outline";
+import { useEffect } from "react";
 
-import {useState} from "react";
-
-type Props = {
-  isCollapsed: boolean;
-  setIsCollapsed: (value: boolean) => void;
+type NavLink = {
+  name: string;
+  href: string;
+  icon: React.ElementType;
 };
 
-const navigation = [
-  {
-    id: "email",
-    label: "Email",
-    icon: EnvelopeIcon,
-    defaultExpanded: true,
-    links: [
-      {name: "Email Campaigns", href: "/campaigns"},
-      {name: "Email Templates", href: "/templates"},
-    ],
-  },
-  {
-    id: "users",
-    label: "Users",
-    icon: UsersIcon,
-    defaultExpanded: true,
-    links: [
-      {name: "Interest Groups", href: "/interest-groups"},
-      {name: "All Users", href: "/all-users"},
-    ],
-  },
-];
+type NavSection = {
+  id: string;
+  label: string;
+  icon: React.ElementType;
+  links: NavLink[];
+};
 
-export default function Sidebar({isCollapsed, setIsCollapsed}: Props) {
-  const [expandedSections, setExpandedSections] = useState(() => {
-    const init: Record<string, boolean> = {};
-    navigation.forEach((section) => {
-      init[section.id] = !!section.defaultExpanded;
-    });
-    return init;
-  });
+export default function Sidebar({
+  isCollapsed,
+  setIsCollapsed,
+}: {
+  isCollapsed: boolean;
+  setIsCollapsed: (value: boolean) => void;
+}) {
+  const { user } = useUser();
 
-  const toggleSection = (id: string) => {
-    setExpandedSections((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+  const toggleSidebar = () => {
+    const next = !isCollapsed;
+    setIsCollapsed(next);
+    localStorage.setItem("sidebar-collapsed", String(next));
   };
 
+  const sections: NavSection[] = [
+    {
+      id: "admin",
+      label: "Admin Area",
+      icon: ShieldCheckIcon,
+      links: user?.scope.includes("admin")
+        ? [
+            { name: "Campaigns", href: "/campaigns", icon: EnvelopeIcon },
+            { name: "Templates", href: "/templates", icon: DocumentTextIcon },
+            {
+              name: "Interest Groups",
+              href: "/interest-groups",
+              icon: UserGroupIcon,
+            },
+            { name: "Users", href: "/all-users", icon: UsersIcon },
+          ]
+        : [],
+    },
+    {
+      id: "personal",
+      label: user?.name || "John Smith",
+      icon: UserIcon,
+      links: [
+        { name: "My Campaigns", href: "/user/campaigns", icon: EnvelopeIcon },
+        {
+          name: "CPD Feedback",
+          href: "/user/feedback",
+          icon: DocumentTextIcon,
+        },
+      ],
+    },
+  ];
+
   return (
-    <div
-      className={`fixed top-0 left-0 h-screen bg-primary-500 text-white z-50 transition-all duration-300 flex flex-col ${
+    <aside
+      className={`fixed top-0 left-0 h-screen z-50 transition-all duration-300 flex flex-col bg-primary-500 ${
         isCollapsed ? "w-16" : "w-72"
       }`}
     >
-      {/* Logo & Toggle */}
+      {/* Logo and toggle */}
       <div
         className={`flex items-center justify-between px-4 pt-6 pb-4 ${
           isCollapsed ? "justify-center" : ""
@@ -76,10 +95,7 @@ export default function Sidebar({isCollapsed, setIsCollapsed}: Props) {
             height={32}
           />
         )}
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="text-white hover:text-white"
-        >
+        <button onClick={toggleSidebar} className="text-white hover:text-white">
           {isCollapsed ? (
             <Bars3Icon className="h-6 w-6" />
           ) : (
@@ -90,48 +106,46 @@ export default function Sidebar({isCollapsed, setIsCollapsed}: Props) {
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto">
-        {navigation.map((section) => (
+        {sections.map((section) => (
           <div key={section.id}>
+            {/* Section Header */}
             {!isCollapsed ? (
-              <button
-                onClick={() => toggleSection(section.id)}
-                className="w-full flex justify-between items-center px-3 pt-2 pb-1 text-white text-xs uppercase tracking-wide font-semibold hover:text-white"
-              >
-                <div className="flex items-center gap-2">
-                  <section.icon className="h-4 w-4" />
-                  <span>{section.label}</span>
-                </div>
-                <span>
-                  {expandedSections[section.id] ? (
-                    <ChevronDownIcon className="h-4 w-4" />
-                  ) : (
-                    <ChevronRightIcon className="h-4 w-4" />
-                  )}
-                </span>
-              </button>
+              <div className="flex items-center gap-2 px-3 pt-2 pb-1 text-white text-sm uppercase tracking-wide font-semibold">
+                <section.icon className="h-6 w-6 opacity-50" />
+                <span>{section.label}</span>
+              </div>
             ) : (
-              <div className="px-2 py-2 text-center" title={section.label}>
-                <section.icon className="h-5 w-5 mx-auto" />
+              <div
+                className="flex justify-center py-2 opacity-40 text-white"
+                title={section.label}
+              >
+                <section.icon className="h-6 w-6" />
               </div>
             )}
 
-            {!isCollapsed && expandedSections[section.id] && (
-              <ul className="flex flex-col px-3 pb-2">
-                {section.links.map((link) => (
-                  <li key={link.name}>
-                    <Link
-                      href={link.href}
-                      className="block font-semibold px-4 py-2 rounded hover:bg-primary-600"
-                    >
-                      {link.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
+            {/* Section Links */}
+            <ul
+              className={`flex flex-col ${
+                isCollapsed ? "items-center gap-1 pb-2" : "px-3 pb-2"
+              }`}
+            >
+              {section.links.map((link) => (
+                <li key={link.name} title={isCollapsed ? link.name : undefined}>
+                  <Link
+                    href={link.href}
+                    className={`flex items-center font-semibold rounded text-white hover:bg-primary-600 transition-colors ${
+                      isCollapsed ? "justify-center p-2" : "px-4 py-2 gap-2"
+                    }`}
+                  >
+                    <link.icon className="h-5 w-5" />
+                    {!isCollapsed && <span>{link.name}</span>}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         ))}
       </nav>
-    </div>
+    </aside>
   );
 }

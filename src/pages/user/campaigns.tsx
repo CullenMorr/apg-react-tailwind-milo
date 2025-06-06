@@ -1,22 +1,29 @@
 import Head from "next/head";
-import { Campaign } from "@/types/campaign";
 import { useEffect, useState } from "react";
+import { Campaign } from "@/types/campaign";
+import { useUser } from "@/context/UserContext"; // <- get the user from context
 
 // Components
 import CampaignCard from "@/components/ui/campaign/Card";
 import CampaignPreviewCard from "@/components/ui/campaign/PreviewCard";
 
-export default function CampaignsPage() {
+export default function UserCampaignsPage() {
+  const { user } = useUser(); // <- use user from context
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [recentCampaigns, setRecentCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (!user?.id) return;
+
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/campaigns");
+        const res = await fetch(
+          `/api/campaigns/fetchUserCampaigns?filter[sent_from_user_id]=${user.id}`
+        );
         if (!res.ok) throw new Error(`Failed with status ${res.status}`);
+
         const json = await res.json();
         const allCampaigns = json.data;
 
@@ -43,16 +50,18 @@ export default function CampaignsPage() {
     };
 
     fetchData();
-  }, []);
+  }, [user]);
 
   return (
     <>
       <Head>
-        <title>Campaigns | MILO</title>
+        <title>My Campaigns | MILO</title>
       </Head>
 
       <section className="mx-auto px-6 py-12">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-8">Campaigns</h1>
+        <h1 className="text-2xl font-semibold text-gray-900 mb-8">
+          My Campaigns
+        </h1>
 
         {error && <p className="text-red-500">Error: {error}</p>}
 

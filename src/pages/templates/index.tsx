@@ -1,6 +1,5 @@
 import Head from "next/head";
-import Layout from "@/layouts/Layout";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import TemplateCard from "@/components/ui/template/Card";
 
 type Template = {
@@ -38,21 +37,18 @@ export default function TemplatesPage() {
       <Head>
         <title>Templates | MILO</title>
       </Head>
-      <Layout>
-        <section className="mx-auto px-6 py-12">
-          <h1 className="text-2xl font-semibold text-gray-900 mb-8">
-            Templates
-          </h1>
 
-          {error && <p className="text-red-500">Error: {error}</p>}
+      <section className="mx-auto px-6 py-12">
+        <h1 className="text-2xl font-semibold text-gray-900 mb-8">Templates</h1>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {templates.map((template) => (
-              <TemplateCard key={template.id} template={template} />
-            ))}
-          </div>
-        </section>
-      </Layout>
+        {error && <p className="text-red-500">Error: {error}</p>}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {templates.map((template) => (
+            <TemplateCard key={template.id} template={template} />
+          ))}
+        </div>
+      </section>
     </>
   );
 }
