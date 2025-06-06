@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { Campaign } from "@/types/campaign";
-import { useUser } from "@/context/UserContext"; // <- get the user from context
+import { useUser } from "@/context/UserContext";
 
 // Components
 import CampaignCard from "@/components/ui/campaign/Card";

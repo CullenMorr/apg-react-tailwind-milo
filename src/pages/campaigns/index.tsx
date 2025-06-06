@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 // Components
 import CampaignCard from "@/components/ui/campaign/Card";
 import CampaignPreviewCard from "@/components/ui/campaign/PreviewCard";
+import CampaignPreviewCardSkeleton from "@/components/ui/campaign/PreviewCardSkeleton";
 
 export default function CampaignsPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
@@ -56,13 +57,13 @@ export default function CampaignsPage() {
 
         {error && <p className="text-red-500">Error: {error}</p>}
 
-        {recentCampaigns.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-            {recentCampaigns.map((campaign) => (
-              <CampaignPreviewCard key={campaign.id} campaign={campaign} />
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          {loading
+            ? [1, 2].map((i) => <CampaignPreviewCardSkeleton key={i} />)
+            : recentCampaigns.map((campaign) => (
+                <CampaignPreviewCard key={campaign.id} campaign={campaign} />
+              ))}
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6">
           {campaigns.map((campaign) => (

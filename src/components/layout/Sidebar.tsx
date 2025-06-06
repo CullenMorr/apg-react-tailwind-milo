@@ -76,7 +76,7 @@ export default function Sidebar({
 
   return (
     <aside
-      className={`fixed top-0 left-0 h-screen z-50 transition-all duration-300 flex flex-col bg-primary-500 ${
+      className={`fixed top-0 left-0 h-screen z-50 transition-all duration-300 flex flex-col bg-primary-800 ${
         isCollapsed ? "w-16" : "w-72"
       }`}
     >
@@ -123,7 +123,7 @@ export default function Sidebar({
               </div>
             )}
 
-            {/* Section Links */}
+            {/* Sections */}
             <ul
               className={`flex flex-col ${
                 isCollapsed ? "items-center gap-1 pb-2" : "px-3 pb-2"
@@ -133,7 +133,7 @@ export default function Sidebar({
                 <li key={link.name} title={isCollapsed ? link.name : undefined}>
                   <Link
                     href={link.href}
-                    className={`flex items-center font-semibold rounded text-white hover:bg-primary-600 transition-colors ${
+                    className={`flex items-center font-semibold rounded text-white hover:bg-primary-900 transition-colors ${
                       isCollapsed ? "justify-center p-2" : "px-4 py-2 gap-2"
                     }`}
                   >

@@ -24,7 +24,6 @@ export default function CampaignPreviewCard({
 
   return (
     <div className="bg-white border-2 border-indigo-500 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
-      {/* Title + Status */}
       <div className="flex justify-between items-start mb-4">
         <h2 className="text-xl font-semibold text-gray-900">{campaign.name}</h2>
         {campaign.status && (
@@ -40,7 +39,6 @@ export default function CampaignPreviewCard({
         )}
       </div>
 
-      {/* Subject, Sender, etc. */}
       <div className="text-sm text-gray-700 space-y-1 mb-6">
         {campaign.email_template?.subject_line_for_front_end && (
           <p>
@@ -68,7 +66,6 @@ export default function CampaignPreviewCard({
         )}
       </div>
 
-      {/* Tri-column stats */}
       <div className="grid grid-cols-3 gap-4 text-center text-sm mb-4">
         <div className="bg-blue-50 rounded p-2 group">
           <div className="text-blue-600">Sent</div>
@@ -95,7 +92,6 @@ export default function CampaignPreviewCard({
         </div>
       </div>
 
-      {/* Sent date */}
       <p className="text-xs text-gray-400">
         Sent on {new Date(campaign.send_at).toLocaleString()}
       </p>
