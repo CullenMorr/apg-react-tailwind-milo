@@ -4,7 +4,7 @@ const DEV_TOKEN = process.env.TOKEN;
 // Get CSRF token from Laravel
 export const initSanctum = async () => {
   await fetch(`${API_BASE}/sanctum/csrf-cookie`, {
-    credentials: "include", // ensures cookies are sent
+    credentials: "include",
   });
 };
 

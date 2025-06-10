@@ -1,14 +1,14 @@
 import Head from "next/head";
-import { useEffect, useState } from "react";
-import { Campaign } from "@/types/campaign";
-import { useUser } from "@/context/UserContext";
+import {useEffect, useState} from "react";
+import {Campaign} from "@/types/campaign";
+import {useUser} from "@/context/UserContext";
 
 // Components
 import CampaignCard from "@/components/ui/campaign/Card";
 import CampaignPreviewCard from "@/components/ui/campaign/PreviewCard";
 
 export default function UserCampaignsPage() {
-  const { user } = useUser(); // <- use user from context
+  const {user} = useUser(); // <- use user from context
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [recentCampaigns, setRecentCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
